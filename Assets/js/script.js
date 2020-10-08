@@ -1,11 +1,30 @@
-// set-up and text linkages between html/js/style
-
 // determine and TEST endpoint for API calls to openWeather
     // openWeatherAPI_key: e4c79656912e2022efd4f848cf4c49dc
     // ex: https://api.openweathermap.org/data/2.5/weather?q=London,uk&appid=YOUR_API_KEY
     // 5-day ex: api.openweathermap.org/data/2.5/forecast?q={city name},{state code}&appid={API key}
     
 // develop getWeather = function fetch API request in the form of JSON data - TEST
+var getWeather = function(userCity) {
+    // format api urls for both OpenWeather endpoints in order to make multiple api calls at once using promise.all() and array.map() methods learned from the following site: https://gomakethings.com/waiting-for-multiple-all-api-responses-to-complete-with-the-vanilla-js-promise.all-method/
+    var apiUrls = [
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&units=imperial&appid=e4c79656912e2022efd4f848cf4c49dc"),
+        fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&units=imperial&appid=e4c79656912e2022efd4f848cf4c49dc")
+    ];
+    // submit http request
+    Promise.all(apiUrls).then(function(responses) {
+        // using map() method to get a response array of json objects, 
+        return Promise.all(responses.map(function(response) {
+            return response.json();
+        }))
+        .then(function(data) {
+            console.log(data);
+        }) 
+        .catch(function(error) {
+            console.log(error);
+        });
+    });    
+};
+getWeather("madison")
     // set up request to take user input (getWeather - function(userCity)) - TEST
     // be sure to include user not found error
     // include catch alert for any network errors
