@@ -1,26 +1,58 @@
-// DOM OBJECTS
+// DOM OBJECTS &/or GLOBAL VARIABLES
 var userInputEl = document.querySelector("form.input-group.mb-3");
 var userCityEl = document.querySelector("input#city-search");
+var searchBtnEl = document.querySelector("button#search-button");
 
-    // set up request to take user input (getWeather - function(userCity)) - TEST
+var searchHistoryEl = document.querySelector("ul#city-list");
+var history = [];
+// var history = JSON.parse(localStorage.getItem('history')) || [];
+
+var currentDate = moment().format('MM/DD/YYYY');
+
+var cityStatsEl = document.querySelector("div#city-stats");
+var currentCityEl = document.querySelector("h3#city-date");
+
+var currentForecastEl = document.querySelector("div#forecast");
+var forecastDay1El = document.querySelector("div#day1");
+var forecastDay2El = document.querySelector("div#day2");
+var forecastDay3El = document.querySelector("div#day3");
+var forecastDay4El = document.querySelector("div#day4");
+var forecastDay5El = document.querySelector("div#day5");
+
+// INPUT FUNCTION gets user input value from form and packages for http request
     // be sure to include user not found error
-    // include catch alert for any network errors
 var inputHandler = function(event) {
     // prevents browser default behavior of sending input data to URL
     event.preventDefault();
-    // get value from input element
+
+    // get current city search value and remove leading/trailing whitespace
     var userCity = userCityEl.value.trim();
 
+    // get the city search order from list of other cities
+
+    // package objects
+    cityEntry = {
+        city: userCity,
+        // order: citySearchOrder,
+    };
+
+    // push entry as array to 'history'
+    // history.push(cityEntry);
+
+    // check whether there is a value prior to sending http request and clear form value for subsequent searches
     if (userCity) {
         getWeather(userCity);
-        userCityEl = '';
+        saveCity(userCity);
+        userCityEl.value = '';
     } else {
         alert("Please enter a city into the search form");
     }
-    console.log(event);
+
+    saveCity(userCity)
 };
     
-// develop getWeather = function fetch API request in the form of JSON data - TEST
+// FETCH FUNCTION formats and sends api request
+    // include catch alert for any network errors
 var getWeather = function(userCity) {
     // format api urls for both OpenWeather endpoints in order to make multiple api calls at once using promise.all() and array.map() methods learned from the following site: https://gomakethings.com/waiting-for-multiple-all-api-responses-to-complete-with-the-vanilla-js-promise.all-method/
     var apiUrls = [
@@ -34,49 +66,81 @@ var getWeather = function(userCity) {
             return response.json();
         }))
         .then(function(data) {
+            displayCityStats(data, userCity)
+            displayForecast(data, userCity)
             console.log(data);
         }) 
         .catch(function(error) {
             console.log(error);
         });
-    });    
+    });
+
 };
 
-
 // use input to display data to page -TEST
+// be sure to clear old content - TEST
 
-// include error handling
+// // DISPLAY FUNCTION to pull preserved city list from local storage and update 'history' array
+// var retrieveHistory = function() {
 
-// create global variables to reference input group div, input element, submit button
+//     // loop through each saved city search to place within 'history' array
+//     for (var i=0; i<history.length; i++) {
+//         var userCity = history[i].city;
+//         var citySearchOrder = history[i].order
+//     }
 
-// searchSubmitHandler = function(event) - to be executed upon input submission
-    // get value from input element and send to get weather function - TEST
+// };
+// retrieveHistory()
 
-// check the container ids for the gathered inputs to be displayed within (citySearch, 5-day, history)
-    // create global variables to reference the dynamic content elements
+// SAVE FUNCTION to preserve each city as item in 'history' array to local storage
+// var saveCity = function(userCity) {  
+//     localStorage.setItem('history', JSON.stringify(history));
+// }
 
-// develop function/s that will take in location data as a parameter
-
-// create function to display weather displayWeather = function(queryInput, searchTerms)
-    // be sure to clear old content - TEST
+// function needed to preserve cities in local storage and display using links or buttons
+    // convert(?) stored city names to a list of http requests using for-loop
+    // create <a> containers w. href for each city name saved to local storage
+    // use query parameter to extract the needed search string for forming the http request, possibly using split() method e.g. string.split('=') plus the index of resulting info
+var displaySearchHistory = function(history) {
+    
+    console.log(history);
+}
 
 // function needed to display city of interest
     // loop through each desired data object to display (city name, date, weather conditions icon, temperature, humidity, wind speed, UV index)
     // use else/if statements to color-code UV index to favorable/moderate/severe
+var displayCityStats = function(cityWeather, userCity) {
+
+    //clear old content
+    currentCityEl.textContent = '';
+
+    console.log(cityWeather);
+    console.log(userCity);
+}
 
 // function needed to display 5-day forecast
     // 5-day forcast presents date, weather conditions icon, temperature, humidity
+var displayForecast = function(city5day, userCity) {
+    
+    //clear old content
+    forecastDay1El.innerHTML = '';
+    forecastDay2El.innerHTML = '';
+    forecastDay3El.innerHTML = '';
+    forecastDay4El.innerHTML = '';
+    forecastDay5El.innerHTML = '';
 
-// function needed to preserve cities in local storage and display within history
-    // convert(?) stored city names to a list of http requests using for-loop
-    // create <a> containers w. href for each city name saved to local storage
-    // use query parameter to extract the needed search string for forming the http request, possibly using split() method e.g. string.split('=') plus the index of resulting info
+    console.log(city5day);
+    console.log(userCity);
+}
+
+// create global variables to reference input group div, input element, submit button
 
 // error handling - be sure to include this for all display functions above
     // to handle empty string
     // to handle incorrectly spelled location
 
-// add submit event listener at bottom of page on input group div element TEST
+// submit event listener on input form group
 userInputEl.addEventListener("submit", inputHandler);
+// searchBtnEl.addEventListener("click", inputHandler);
     
 

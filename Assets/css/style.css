@@ -6,7 +6,7 @@ header h1.row {
     align-content: center;
 }
 
-div#forecast {
+div#city-forecast {
     border: none;
     margin: 10px 0
 }
