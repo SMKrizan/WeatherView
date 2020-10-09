@@ -4,8 +4,8 @@ var userCityEl = document.querySelector("input#city-search");
 var searchBtnEl = document.querySelector("button#search-button");
 
 var searchHistoryEl = document.querySelector("ul#city-list");
-var history = [];
-// var history = JSON.parse(localStorage.getItem('history')) || [];
+// var searchHistory = [];
+var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
 var currentDate = moment().format('MM/DD/YYYY');
 
@@ -27,17 +27,6 @@ var inputHandler = function(event) {
 
     // get current city search value and remove leading/trailing whitespace
     var userCity = userCityEl.value.trim();
-
-    // get the city search order from list of other cities
-
-    // package objects
-    cityEntry = {
-        city: userCity,
-        // order: citySearchOrder,
-    };
-
-    // push entry as array to 'history'
-    // history.push(cityEntry);
 
     // check whether there is a value prior to sending http request and clear form value for subsequent searches
     if (userCity) {
@@ -80,30 +69,32 @@ var getWeather = function(userCity) {
 // use input to display data to page -TEST
 // be sure to clear old content - TEST
 
-// // DISPLAY FUNCTION to pull preserved city list from local storage and update 'history' array
-// var retrieveHistory = function() {
+// DISPLAY FUNCTION to pull preserved city list from local storage and update 'searchHistory' array
+var displayHistory = function() {
+    // loop through 'searchHistory' array to create an element for each saved city search 
+    for (var i=0; i<searchHistory.length; i=i+2) {
+        var listEl = document.createElement('li');
+        listEl.textContent = searchHistory[i];
+        searchHistoryEl.append(listEl);
+    }
 
-//     // loop through each saved city search to place within 'history' array
-//     for (var i=0; i<history.length; i++) {
-//         var userCity = history[i].city;
-//         var citySearchOrder = history[i].order
-//     }
 
-// };
-// retrieveHistory()
+};
+displayHistory()
 
-// SAVE FUNCTION to preserve each city as item in 'history' array to local storage
-// var saveCity = function(userCity) {  
-//     localStorage.setItem('history', JSON.stringify(history));
-// }
+// SAVE FUNCTION to preserve each city as item in 'searchHistory' array to local storage
+var saveCity = function(userCity) {  
+    searchHistory.push(userCity);
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+}
 
 // function needed to preserve cities in local storage and display using links or buttons
     // convert(?) stored city names to a list of http requests using for-loop
     // create <a> containers w. href for each city name saved to local storage
     // use query parameter to extract the needed search string for forming the http request, possibly using split() method e.g. string.split('=') plus the index of resulting info
-var displaySearchHistory = function(history) {
+var displaySearchHistory = function(searchHistory) {
     
-    console.log(history);
+    console.log(searchHistory);
 }
 
 // function needed to display city of interest
@@ -114,9 +105,7 @@ var displayCityStats = function(cityWeather, userCity) {
     //clear old content
     currentCityEl.textContent = '';
 
-    console.log(cityWeather);
-    console.log(userCity);
-}
+        }
 
 // function needed to display 5-day forecast
     // 5-day forcast presents date, weather conditions icon, temperature, humidity
