@@ -11,10 +11,39 @@ div#city-forecast {
     margin: 10px 0
 }
 
+h3#city-date {
+    margin: 0;
+}
+
 div.col.card {
     margin: 0 10px;
     color: white;
     background-color: #0479ff;
     align-content: space-between;
+}
+
+span#city-line {
+    background-color: #dad9f2;
+    padding: 10px 10px 18px 5px;
+    border-radius: 8px;
+    align-content: center;
+}
+
+span#low {
+    background-color: green;
+    padding: 0 6px 2px 6px;
+    border-radius: 8px;
+}
+
+span#med-high {
+    background-color:yellow;
+    padding: 0 6px 2px 6px;
+    border-radius: 8px;
+}
+
+span#severe {
+    background-color: red;
+    padding: 0 6px 2px 6px;
+    border-radius: 8px;
 }
 

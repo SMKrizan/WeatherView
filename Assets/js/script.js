@@ -1,22 +1,28 @@
 // DOM OBJECTS &/or GLOBAL VARIABLES
+// for user inputs
 var userInputEl = document.querySelector("form.input-group.mb-3");
 var userCityEl = document.querySelector("input#city-search");
 var searchBtnEl = document.querySelector("button#search-button");
-
+// current date
+var currentDate = moment().format('MM/DD/YYYY');
+// for city listing based on search history
 var searchHistoryEl = document.querySelector("ul#city-list");
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
-
-var currentDate = moment().format('MM/DD/YYYY');
-
+// for city weather stats
 var cityStatsEl = document.querySelector("div#city-stats");
 var currentCityEl = document.querySelector("h3#city-date");
-
+var currentTempEl = document.querySelector("h4#temp");
+var currentHumidityEl = document.querySelector("h5#humidity");
+var currentWindEl = document.querySelector("h5#wind");
+var currentUvEl = document.querySelector("h5#uv");
+// for 5-day forecast stats
 var currentForecastEl = document.querySelector("div#forecast");
-var forecastDay1El = document.querySelector("div#day1");
-var forecastDay2El = document.querySelector("div#day2");
-var forecastDay3El = document.querySelector("div#day3");
-var forecastDay4El = document.querySelector("div#day4");
-var forecastDay5El = document.querySelector("div#day5");
+var day1 = document.querySelector("div#day1");
+var day2 = document.querySelector("div#day2");
+var day3 = document.querySelector("div#day3");
+var day4 = document.querySelector("div#day4");
+var day5 = document.querySelector("div#day5");
+// END GLOBAL VARIABLES
 
 // INPUT FUNCTION gets user input value from form and packages for http request
 // be sure to include user not found error
@@ -31,12 +37,13 @@ var inputHandler = function (event) {
     if (userCity) {
         getWeather(userCity);
         saveCity(userCity);
+        displayHistory();
         userCityEl.value = '';
     } else {
         alert("Please enter a city into the search form");
     }
 
-    saveCity(userCity)
+    // saveCity(userCity)
 };
 
 // FETCH FUNCTION formats and sends api request
@@ -59,7 +66,6 @@ var getWeather = function (userCity) {
 
                 displayCityStats(cityStats)
                 displayForecast(forecast)
-                console.log(cityStats);
                 console.log(forecast);
             })
             .catch(function (error) {
@@ -68,16 +74,22 @@ var getWeather = function (userCity) {
     });
 };
 
-// use input to display data to page -TEST
-// be sure to clear old content - TEST
-
 // DISPLAY FUNCTION to pull preserved city list from local storage and update 'searchHistory' array
 // function needed to preserve cities in local storage and display using links or buttons
 // create <a> containers w. href for each city name saved to local storage
 // use query parameter to extract the needed search string for forming the http request, possibly using split() method e.g. string.split('=') plus the index of resulting info
 var displayHistory = function () {
+    // clear content
+    searchHistoryEl.innerHTML = '';
+
+    // maintain only the number of search history elements in use
+    var loopLength = 13;
+    if (searchHistory.length < 12) {
+        loopLength = searchHistory.length;
+    }
+
     // loop through 'searchHistory' array to create an element to display each saved city search 
-    for (var i = 0; i < 13; i = i + 2) {
+    for (var i = 0; i < loopLength; i++) {
         var listEl = document.createElement('li');
         listEl.setAttribute('class', 'list-group-item')
         listEl.textContent = searchHistory[i];
@@ -88,70 +100,74 @@ displayHistory()
 
 // SAVE FUNCTION to preserve each city as item in 'searchHistory' array to local storage
 var saveCity = function (userCity) {
-    searchHistory.push(userCity);
+    searchHistory.unshift(userCity);
     localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
 }
 
-// DISPLAY CITYSTATS FUNCTION for user-selected city of interest
-// use else/if statements to color-code UV index to favorable/moderate/severe
+// DISPLAY CITY WEATHER FUNCTION for user-selected city of interest
 var displayCityStats = function (cityStats) {
-    //clear old content
+    // clear old content
     currentCityEl.innerHTML = '';
+    currentTempEl.innerHTML = '';
+    currentHumidityEl.innerHTML = '';
+    currentWindEl.innerHTML = '';
+    currentUvEl.innerHTML = '';
 
-    // populate container with city weather stats
+    // populate container with city weather stats (and country to disambiguate)
+    // display city, date and weather icon; guidance located at following site: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
     currentCity = cityStats.name + ", " + cityStats.sys.country;
-
-    // set up for weather icon; guidance located at following site: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
     var weatherIcon = "http://openweathermap.org/img/wn/" + cityStats.weather[0].icon + "@2x.png";
-    currentCityEl.innerHTML = currentCity + "<span> (" + currentDate + ")"
-        + "<img src=" + weatherIcon + " alt='weather icon' /></span> ";
+    currentCityEl.innerHTML = "<span id='city-line'>" + currentCity + " (" + currentDate + ")"
+        + "<img src=" + weatherIcon + " alt='weather icon' /></span>";
 
     // temp element
-    var tempH4 = document.createElement("h4");
-    tempH4.textContent = "Temperature: " + cityStats.main.temp + "℉";
-    cityStatsEl.append(tempH4);
+    currentTempEl.textContent = "Temperature: " + cityStats.main.temp + "℉";
 
     // humidity element
-    var humidityH5 = document.createElement('h5');
-    humidityH5.textContent = "Humidity: " + cityStats.main.humidity + "%";
-    cityStatsEl.append(humidityH5);
+    currentHumidityEl.textContent = "Humidity: " + cityStats.main.humidity + "%";
 
     // wind-speed element
-    var windH5 = document.createElement('h5');
-    windH5.textContent = "Wind speed: " + cityStats.wind.speed + " miles/hour";
-    cityStatsEl.append(windH5);
+    currentWindEl.textContent = "Wind speed: " + cityStats.wind.speed + " miles/hour";
 
-    //UV-index element
-    console.log(cityStats.coord.lat);
-    console.log(cityStats.coord.lon);
+    // UV-index element; warning values based on information accessed at https://www.epa.gov/sunsafety/uv-index-scale-0
     fetch("http://api.openweathermap.org/data/2.5/uvi?lat=" + cityStats.coord.lat +
         "&lon=" + cityStats.coord.lon + "&appid=e4c79656912e2022efd4f848cf4c49dc")
-            .then(function (response) {
+        .then(function (response) {
             return response.json();
         })
         .then(function (response) {
-            console.log(response.data);
-            var uvH5 = document.createElement('h5');
-            uvH5.textContent = "UV Index: ";
-            cityStatsEl.append(uvH5);
+            uvIndex = parseFloat(response.value);
+            if (uvIndex <= 2) {
+                currentUvEl.innerHTML = "<span id='low'> UV Index: " + uvIndex + "</span>";
+            }
+            else if (uvIndex <= 8) {
+                currentUvEl.innerHTML = "<span id='med-high'> UV Index: " + uvIndex + "</span>";
+            }
+            else {
+                currentUvEl.innerHTML = "<span id='severe'> UV Index: " + uvIndex + "</span>";
+            }
+
         })
         .catch(function (error) {
             console.log(error);
         });
-
 }
 
 // function needed to display 5-day forecast
-// 5-day forcast presents date, weather conditions icon, temperature, humidity
+// 5-day forcast presents date, icon, temperature, humidity
 var displayForecast = function (forecast) {
-
     //clear old content
-    currentForecastEl.innerHTML = '';
-    // forecastDay1El.innerHTML = '';
-    // forecastDay2El.innerHTML = '';
-    // forecastDay3El.innerHTML = '';
-    // forecastDay4El.innerHTML = '';
-    // forecastDay5El.innerHTML = '';
+    day1.innerHTML = '';
+    day2.innerHTML = '';
+    day3.innerHTML = '';
+    day4.innerHTML = '';
+    day5.innerHTML = '';
+
+    // display day 1 forecast
+    day1date = forecast.list[0].dt_txt.substring(0, 11);
+    day1.
+
+
 
     console.log();
 
