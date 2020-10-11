@@ -5,10 +5,12 @@ var userCityEl = document.querySelector("input#city-search");
 var searchBtnEl = document.querySelector("button#search-button");
 // current date
 var currentDate = moment().format('MM/DD/YYYY');
+var currentDay = moment().format('D');
+console.log(currentDay);
 // for city listing based on search history
 var searchHistoryEl = document.querySelector("ul#city-list");
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
-// for city weather stats
+// for current weather stats
 var cityStatsEl = document.querySelector("div#city-stats");
 var currentCityEl = document.querySelector("h3#city-date");
 var currentTempEl = document.querySelector("h4#temp");
@@ -16,12 +18,18 @@ var currentHumidityEl = document.querySelector("h5#humidity");
 var currentWindEl = document.querySelector("h5#wind");
 var currentUvEl = document.querySelector("h5#uv");
 // for 5-day forecast stats
-var currentForecastEl = document.querySelector("div#forecast");
-var day1 = document.querySelector("div#day1");
-var day2 = document.querySelector("div#day2");
-var day3 = document.querySelector("div#day3");
-var day4 = document.querySelector("div#day4");
-var day5 = document.querySelector("div#day5");
+// var currentForecastEl = document.querySelector("div#5day");
+var day1 = document.getElementsByClassName("day1");
+console.log(day1);
+var day2 = document.getElementsByClassName("day2");
+var day3 = document.getElementsByClassName("day3");
+var day4 = document.getElementsByClassName("day4");
+var day5 = document.getElementsByClassName("day5");
+var dayTitle = document.getElementsByClassName('day-date');
+console.log(dayTitle);
+var dayIcon = document.getElementsByClassName('icon');
+var dayTemp = document.getElementsByClassName('temp');
+var dayHumidity = document.getElementsByClassName('humidity');
 // END GLOBAL VARIABLES
 
 // INPUT FUNCTION gets user input value from form and packages for http request
@@ -66,6 +74,7 @@ var getWeather = function (userCity) {
 
                 displayCityStats(cityStats)
                 displayForecast(forecast)
+                console.log(cityStats);
                 console.log(forecast);
             })
             .catch(function (error) {
@@ -83,13 +92,13 @@ var displayHistory = function () {
     searchHistoryEl.innerHTML = '';
 
     // maintain only the number of search history elements in use
-    var loopLength = 13;
-    if (searchHistory.length < 12) {
-        loopLength = searchHistory.length;
+    var cityList = 7;
+    if (searchHistory.length < 6) {
+        cityList = searchHistory.length;
     }
 
     // loop through 'searchHistory' array to create an element to display each saved city search 
-    for (var i = 0; i < loopLength; i++) {
+    for (var i = 0; i < cityList; i++) {
         var listEl = document.createElement('li');
         listEl.setAttribute('class', 'list-group-item')
         listEl.textContent = searchHistory[i];
@@ -156,23 +165,37 @@ var displayCityStats = function (cityStats) {
 // function needed to display 5-day forecast
 // 5-day forcast presents date, icon, temperature, humidity
 var displayForecast = function (forecast) {
-    //clear old content
-    day1.innerHTML = '';
-    day2.innerHTML = '';
-    day3.innerHTML = '';
-    day4.innerHTML = '';
-    day5.innerHTML = '';
 
-    // display day 1 forecast
-    day1date = forecast.list[0].dt_txt.substring(0, 11);
-    day1.
-
-
-
-    console.log();
-
+    for (var i = 0; i < dayTitle.length; i++) {
+        //clear old content
+        dayTitle[i].textContent = '';
+        dayIcon[i].textContent = '';
+        dayTemp[i].textContent = '';
+        dayHumidity[i].textContent = '';
+        // 1st 5-day time-point is 
+        var n = (i + 1) * 7
+        // display date
+        dayTitle[i].textContent = forecast.list[n].dt_txt.substring(0, 11);
+        for (var j = 0; j < 40; j++) {
+            // look for stats at noon
+            if (forecast.list[j].dt_txt.substring(11) === "12:00:00")
+                && (currentDay === (parseInt(forecast.list[j].dt_txt.substring(9, 11)) + i)) {
+                // display weather icon
+                var fiveDayIcon = "http://openweathermap.org/img/wn/" + forecast.list[j].weather[0].icon + ".png";
+                dayIcon[i].innerHTML = "<span id='5day-icon'><img src=" + fiveDayIcon + " alt='weather icon' /></span>";
+                //display temperature
+                dayTemp[i].textContent = forecast.list[j].main.temp + "℉";
+                //display humidity
+                dayHumidity[i].textContent = forecast.list[j].main.humidity + "%";
+            } else {
+                //display temperature
+                dayTemp[i].textContent = "No items match your search";
+                //display humidity
+                dayHumidity[i].textContent = "No items match your search";
+            }
+        }
+    }
 }
-
 // create global variables to reference input group div, input element, submit button
 
 // error handling - be sure to include this for all display functions above
