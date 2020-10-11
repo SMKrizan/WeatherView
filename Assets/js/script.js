@@ -65,6 +65,8 @@ var getWeather = function (userCity) {
             .then(function (data) {
                 cityStats = data[0];
                 forecast = data[1];
+                console.log(cityStats);
+                console.log(forecast);
 
                 displayCityStats(cityStats)
                 displayForecast(forecast)
@@ -93,7 +95,12 @@ var displayHistory = function () {
     for (var i = 0; i < cityList; i++) {
         var listEl = document.createElement('li');
         listEl.setAttribute('class', 'list-group-item')
-        listEl.innerHTML = "<a href='javascript:getWeather(searchHistory[i])'>" + searchHistory[i] + "</a>";
+        listEl.textContent = searchHistory[i];
+        listEl.onclick = function(event) {
+            if (event.target.tagName === 'LI') {
+                getWeather(event.target.textContent);
+            }
+        }
         searchHistoryEl.append(listEl);
     }
 };

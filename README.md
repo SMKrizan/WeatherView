@@ -1,15 +1,7 @@
 # openWeatherAPI
 
 ## PURPOSE
-This webpage offers users the ability to search for current and future weather conditions based on a global city search. Recently searched cities will be saved in local storage for easy reference. 
-
-##ACCEPTANCE CRITERIA
-
-WHEN I click on a city in the search history
-THEN I am again presented with current and future conditions for that city
-
-## PURPOSE
-This application allows users to retrieve weather data for cities of interest.
+This application allows users to retrieve weather data for any global city of interest. Current and 5-day weather conditions are displayed. Recently searched cities are saved for easy reference. 
 
 ## SCREENSHOT
 <img src="./assets/weather-dashboard.png" alt="a glimpse of the openWeather user interface">
@@ -23,6 +15,7 @@ This application allows users to retrieve weather data for cities of interest.
 
 ## WEBSITE
 https://smkrizan.github.io/openWeatherAPI/
+
 
 ### CONTRIBUTION
 Made with ☕+❤️ by Sara Krizan and in consultation with several LAs, TA, and learning instructor through the University of Wisconsin Extended Campus Coding Bootcamp.
