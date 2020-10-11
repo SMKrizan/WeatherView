@@ -175,11 +175,6 @@ var displayForecast = function (forecast) {
                 //display humidity
                 dayHumidity[i].textContent = "Humidity: " + forecast.list[j].main.humidity + "%";
                 break;
-            // } else {
-            //     //display temperature
-            //     dayTemp[i].textContent = "N/A";
-            //     //display humidity
-            //     dayHumidity[i].textContent = "N/A";
             }
         }
     }
@@ -187,6 +182,3 @@ var displayForecast = function (forecast) {
 
 // submit event listener on input form group
 userInputEl.addEventListener("submit", inputHandler);
-
-// add error handling for all display functions
-    // for incorrectly spelled location
