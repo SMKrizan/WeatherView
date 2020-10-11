@@ -23,7 +23,7 @@ var dayTemp = document.getElementsByClassName('temp');
 var dayHumidity = document.getElementsByClassName('humidity');
 // END GLOBAL VARIABLES
 
-// INPUT FUNCTION gets user input value from form and packages for http request
+// INPUT FUNCTION gets user input value from form and packages for https request
 // add user not found error
 var inputHandler = function (event) {
     // prevents browser default behavior of sending input data to URL
@@ -32,7 +32,7 @@ var inputHandler = function (event) {
     // get current city search value and remove leading/trailing whitespace
     var userCity = userCityEl.value.trim();
 
-    // check whether there is a value prior to sending http request and clear form value for subsequent searches
+    // check whether there is a value prior to sending https request and clear form value for subsequent searches
     if (userCity) {
         getWeather(userCity);
         saveCity(userCity);
@@ -50,7 +50,7 @@ var getWeather = function (userCity) {
         fetch("https://api.openweathermap.org/data/2.5/weather?q=" + userCity + "&units=imperial&appid=e4c79656912e2022efd4f848cf4c49dc"),
         fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + userCity + "&units=imperial&appid=e4c79656912e2022efd4f848cf4c49dc"),
     ];
-    // submit http request
+    // submit https request
     Promise.all(apiUrls).then(function (responses) {
         // using map() method to get a response array of json objects, 
         return Promise.all(responses.map(function (response) {
@@ -116,7 +116,7 @@ var displayCityStats = function (cityStats) {
     // populate container with city weather stats (and country to disambiguate)
     // display city, date and weather icon; guidance located at following site: https://stackoverflow.com/questions/44177417/how-to-display-openweathermap-weather-icon
     currentCity = cityStats.name + ", " + cityStats.sys.country;
-    var weatherIcon = "http://openweathermap.org/img/wn/" + cityStats.weather[0].icon + "@2x.png";
+    var weatherIcon = "https://openweathermap.org/img/wn/" + cityStats.weather[0].icon + "@2x.png";
     currentCityEl.innerHTML = "<span id='city-line'>" + currentCity + " (" + currentDate + ")"
         + "<img src=" + weatherIcon + " alt='weather icon' /></span>";
 
@@ -127,7 +127,7 @@ var displayCityStats = function (cityStats) {
     // wind-speed element
     currentWindEl.textContent = "Wind speed: " + cityStats.wind.speed + " miles/hour";
     // UV-index element; warning values based on information accessed at https://www.epa.gov/sunsafety/uv-index-scale-0
-    fetch("http://api.openweathermap.org/data/2.5/uvi?lat=" + cityStats.coord.lat +
+    fetch("https://api.openweathermap.org/data/2.5/uvi?lat=" + cityStats.coord.lat +
         "&lon=" + cityStats.coord.lon + "&appid=e4c79656912e2022efd4f848cf4c49dc")
         .then(function (response) {
             return response.json();
@@ -168,7 +168,7 @@ var displayForecast = function (forecast) {
                 // display date
                 dayTitle[i].textContent = forecast.list[j].dt_txt.substring(0, 11);
                 // display weather icon
-                var fiveDayIcon = "http://openweathermap.org/img/wn/" + forecast.list[j].weather[0].icon + ".png";
+                var fiveDayIcon = "https://openweathermap.org/img/wn/" + forecast.list[j].weather[0].icon + ".png";
                 dayIcon[i].innerHTML = "<span id='5day-icon'><img src=" + fiveDayIcon + " alt='weather icon' /></span>";
                 //display temperature
                 dayTemp[i].textContent = "Temperature: " + forecast.list[j].main.temp + "℉";
