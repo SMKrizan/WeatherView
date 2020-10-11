@@ -6,7 +6,6 @@ var searchBtnEl = document.querySelector("button#search-button");
 // current date
 var currentDate = moment().format('MM/DD/YYYY');
 var currentDay = moment().format('D');
-console.log(currentDay);
 // for city listing based on search history
 var searchHistoryEl = document.querySelector("ul#city-list");
 var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
@@ -172,14 +171,22 @@ var displayForecast = function (forecast) {
         dayIcon[i].textContent = '';
         dayTemp[i].textContent = '';
         dayHumidity[i].textContent = '';
-        // 1st 5-day time-point is 
-        var n = (i + 1) * 7
-        // display date
-        dayTitle[i].textContent = forecast.list[n].dt_txt.substring(0, 11);
+        // looping through all 40 datapoints from the 5-day forecast data
         for (var j = 0; j < 40; j++) {
-            // look for stats at noon
-            if (forecast.list[j].dt_txt.substring(11) === "12:00:00")
-                && (currentDay === (parseInt(forecast.list[j].dt_txt.substring(9, 11)) + i)) {
+            // look for noontime data
+            day = parseInt(currentDay) + 1;
+            hourDatum = forecast.list[j].dt_txt.substring(11)
+            dayDatum = parseInt(forecast.list[j].dt_txt.substring(8, 10))
+            console.log([j]);
+            console.log(hourDatum);
+            console.log(day);
+            console.log(day + i);
+            console.log(dayDatum);
+            console.log(forecast.list[j].main.temp);
+            console.log(forecast.list[j].main.humidity);
+            if (hourDatum === "12:00:00" && day + i === dayDatum) {
+                // display date
+                dayTitle[i].textContent = forecast.list[j].dt_txt.substring(0, 11);
                 // display weather icon
                 var fiveDayIcon = "http://openweathermap.org/img/wn/" + forecast.list[j].weather[0].icon + ".png";
                 dayIcon[i].innerHTML = "<span id='5day-icon'><img src=" + fiveDayIcon + " alt='weather icon' /></span>";
@@ -189,9 +196,9 @@ var displayForecast = function (forecast) {
                 dayHumidity[i].textContent = forecast.list[j].main.humidity + "%";
             } else {
                 //display temperature
-                dayTemp[i].textContent = "No items match your search";
+                dayTemp[i].textContent = "N/A";
                 //display humidity
-                dayHumidity[i].textContent = "No items match your search";
+                dayHumidity[i].textContent = "N/A";
             }
         }
     }
