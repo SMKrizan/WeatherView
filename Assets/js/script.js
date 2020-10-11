@@ -194,6 +194,7 @@ var displayForecast = function (forecast) {
                 dayTemp[i].textContent = forecast.list[j].main.temp + "℉";
                 //display humidity
                 dayHumidity[i].textContent = forecast.list[j].main.humidity + "%";
+                break;
             } else {
                 //display temperature
                 dayTemp[i].textContent = "N/A";
