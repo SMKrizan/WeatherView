@@ -17,11 +17,6 @@ var currentHumidityEl = document.querySelector("h5#humidity");
 var currentWindEl = document.querySelector("h5#wind");
 var currentUvEl = document.querySelector("h5#uv");
 // for 5-day forecast stats
-// var day1 = document.getElementsByClassName("day1");
-// var day2 = document.getElementsByClassName("day2");
-// var day3 = document.getElementsByClassName("day3");
-// var day4 = document.getElementsByClassName("day4");
-// var day5 = document.getElementsByClassName("day5");
 var dayTitle = document.getElementsByClassName('day-date');
 var dayIcon = document.getElementsByClassName('icon');
 var dayTemp = document.getElementsByClassName('temp');
@@ -29,7 +24,7 @@ var dayHumidity = document.getElementsByClassName('humidity');
 // END GLOBAL VARIABLES
 
 // INPUT FUNCTION gets user input value from form and packages for http request
-// be sure to include user not found error
+// add user not found error
 var inputHandler = function (event) {
     // prevents browser default behavior of sending input data to URL
     event.preventDefault();
@@ -49,7 +44,6 @@ var inputHandler = function (event) {
 };
 
 // FETCH FUNCTION formats and sends api request
-// include catch alert for any network errors
 var getWeather = function (userCity) {
     // format api urls for both OpenWeather endpoints in order to make multiple api calls at once using promise.all() and array.map() methods learned from the following site: https://gomakethings.com/waiting-for-multiple-all-api-responses-to-complete-with-the-vanilla-js-promise.all-method/
     var apiUrls = [
@@ -71,6 +65,7 @@ var getWeather = function (userCity) {
                 displayCityStats(cityStats)
                 displayForecast(forecast)
             })
+            // catch alert to catch any network errors
             .catch(function (error) {
                 console.log(error);
             });
@@ -78,9 +73,6 @@ var getWeather = function (userCity) {
 };
 
 // DISPLAY FUNCTION to pull preserved city list from local storage and update 'searchHistory' array
-// function needed to preserve cities in local storage and display using links or buttons
-// create <a> containers w. href for each city name saved to local storage
-// use query parameter to extract the needed search string for forming the http request, possibly using split() method e.g. string.split('=') plus the index of resulting info
 var displayHistory = function () {
     // clear content
     searchHistoryEl.innerHTML = '';
@@ -130,13 +122,10 @@ var displayCityStats = function (cityStats) {
 
     // temp element
     currentTempEl.textContent = "Temperature: " + cityStats.main.temp + "℉";
-
     // humidity element
     currentHumidityEl.textContent = "Humidity: " + cityStats.main.humidity + "%";
-
     // wind-speed element
     currentWindEl.textContent = "Wind speed: " + cityStats.wind.speed + " miles/hour";
-
     // UV-index element; warning values based on information accessed at https://www.epa.gov/sunsafety/uv-index-scale-0
     fetch("http://api.openweathermap.org/data/2.5/uvi?lat=" + cityStats.coord.lat +
         "&lon=" + cityStats.coord.lon + "&appid=e4c79656912e2022efd4f848cf4c49dc")
@@ -154,7 +143,6 @@ var displayCityStats = function (cityStats) {
             else {
                 currentUvEl.innerHTML = "<span id='severe'> UV Index: " + uvIndex + "</span>";
             }
-
         })
         .catch(function (error) {
             console.log(error);
@@ -162,7 +150,6 @@ var displayCityStats = function (cityStats) {
 }
 
 // function needed to display 5-day forecast
-// 5-day forcast presents date, icon, temperature, humidity
 var displayForecast = function (forecast) {
     // a loop to represent each of 5 days
     for (var i = 0; i < dayTitle.length; i++) {
@@ -188,23 +175,18 @@ var displayForecast = function (forecast) {
                 //display humidity
                 dayHumidity[i].textContent = "Humidity: " + forecast.list[j].main.humidity + "%";
                 break;
-            } else {
-                //display temperature
-                dayTemp[i].textContent = "N/A";
-                //display humidity
-                dayHumidity[i].textContent = "N/A";
+            // } else {
+            //     //display temperature
+            //     dayTemp[i].textContent = "N/A";
+            //     //display humidity
+            //     dayHumidity[i].textContent = "N/A";
             }
         }
     }
 }
-// create global variables to reference input group div, input element, submit button
-
-// error handling - be sure to include this for all display functions above
-// to handle empty string
-// to handle incorrectly spelled location
 
 // submit event listener on input form group
 userInputEl.addEventListener("submit", inputHandler);
-// searchBtnEl.addEventListener("click", inputHandler);
 
-
+// add error handling for all display functions
+    // for incorrectly spelled location
