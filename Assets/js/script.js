@@ -12,20 +12,17 @@ var searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
 // for current weather stats
 var cityStatsEl = document.querySelector("div#city-stats");
 var currentCityEl = document.querySelector("h3#city-date");
-var currentTempEl = document.querySelector("h4#temp");
+var currentTempEl = document.querySelector("h5#temp");
 var currentHumidityEl = document.querySelector("h5#humidity");
 var currentWindEl = document.querySelector("h5#wind");
 var currentUvEl = document.querySelector("h5#uv");
 // for 5-day forecast stats
-// var currentForecastEl = document.querySelector("div#5day");
-var day1 = document.getElementsByClassName("day1");
-console.log(day1);
-var day2 = document.getElementsByClassName("day2");
-var day3 = document.getElementsByClassName("day3");
-var day4 = document.getElementsByClassName("day4");
-var day5 = document.getElementsByClassName("day5");
+// var day1 = document.getElementsByClassName("day1");
+// var day2 = document.getElementsByClassName("day2");
+// var day3 = document.getElementsByClassName("day3");
+// var day4 = document.getElementsByClassName("day4");
+// var day5 = document.getElementsByClassName("day5");
 var dayTitle = document.getElementsByClassName('day-date');
-console.log(dayTitle);
 var dayIcon = document.getElementsByClassName('icon');
 var dayTemp = document.getElementsByClassName('temp');
 var dayHumidity = document.getElementsByClassName('humidity');
@@ -49,8 +46,6 @@ var inputHandler = function (event) {
     } else {
         alert("Please enter a city into the search form");
     }
-
-    // saveCity(userCity)
 };
 
 // FETCH FUNCTION formats and sends api request
@@ -73,8 +68,6 @@ var getWeather = function (userCity) {
 
                 displayCityStats(cityStats)
                 displayForecast(forecast)
-                console.log(cityStats);
-                console.log(forecast);
             })
             .catch(function (error) {
                 console.log(error);
@@ -100,7 +93,7 @@ var displayHistory = function () {
     for (var i = 0; i < cityList; i++) {
         var listEl = document.createElement('li');
         listEl.setAttribute('class', 'list-group-item')
-        listEl.textContent = searchHistory[i];
+        listEl.innerHTML = "<a href='javascript:getWeather(searchHistory[i])'>" + searchHistory[i] + "</a>";
         searchHistoryEl.append(listEl);
     }
 };
@@ -164,7 +157,7 @@ var displayCityStats = function (cityStats) {
 // function needed to display 5-day forecast
 // 5-day forcast presents date, icon, temperature, humidity
 var displayForecast = function (forecast) {
-
+    // a loop to represent each of 5 days
     for (var i = 0; i < dayTitle.length; i++) {
         //clear old content
         dayTitle[i].textContent = '';
@@ -173,17 +166,10 @@ var displayForecast = function (forecast) {
         dayHumidity[i].textContent = '';
         // looping through all 40 datapoints from the 5-day forecast data
         for (var j = 0; j < 40; j++) {
-            // look for noontime data
             day = parseInt(currentDay) + 1;
             hourDatum = forecast.list[j].dt_txt.substring(11)
             dayDatum = parseInt(forecast.list[j].dt_txt.substring(8, 10))
-            console.log([j]);
-            console.log(hourDatum);
-            console.log(day);
-            console.log(day + i);
-            console.log(dayDatum);
-            console.log(forecast.list[j].main.temp);
-            console.log(forecast.list[j].main.humidity);
+            // look for noontime data
             if (hourDatum === "12:00:00" && day + i === dayDatum) {
                 // display date
                 dayTitle[i].textContent = forecast.list[j].dt_txt.substring(0, 11);
@@ -191,9 +177,9 @@ var displayForecast = function (forecast) {
                 var fiveDayIcon = "http://openweathermap.org/img/wn/" + forecast.list[j].weather[0].icon + ".png";
                 dayIcon[i].innerHTML = "<span id='5day-icon'><img src=" + fiveDayIcon + " alt='weather icon' /></span>";
                 //display temperature
-                dayTemp[i].textContent = forecast.list[j].main.temp + "℉";
+                dayTemp[i].textContent = "Temperature: " + forecast.list[j].main.temp + "℉";
                 //display humidity
-                dayHumidity[i].textContent = forecast.list[j].main.humidity + "%";
+                dayHumidity[i].textContent = "Humidity: " + forecast.list[j].main.humidity + "%";
                 break;
             } else {
                 //display temperature
