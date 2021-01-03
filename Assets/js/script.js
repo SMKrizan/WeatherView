@@ -1,3 +1,4 @@
+// require('dotenv').config();
 // DOM OBJECTS &/or GLOBAL VARIABLES
 // for user inputs
 var userInputEl = document.querySelector("form.input-group.mb-3");

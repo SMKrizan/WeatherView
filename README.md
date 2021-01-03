@@ -1,4 +1,4 @@
-# openWeatherAPI
+# WeatherView
 
 ## PURPOSE
 This application allows users to retrieve weather data for any global city of interest. Current and 5-day weather conditions are displayed. Recently searched cities are saved for easy reference. 

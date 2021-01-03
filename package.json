@@ -1,0 +1,22 @@
+{
+  "name": "weatherview",
+  "version": "1.0.0",
+  "description": "## PURPOSE This application allows users to retrieve weather data for any global city of interest. Current and 5-day weather conditions are displayed. Recently searched cities are saved for easy reference.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SMKrizan/openWeatherAPI.git"
+  },
+  "author": "Sara Krizan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SMKrizan/openWeatherAPI/issues"
+  },
+  "homepage": "https://github.com/SMKrizan/openWeatherAPI#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
