@@ -4,7 +4,7 @@
 This application utilizes the "opeWeather", a 3rd party API, to enable the user to retrieve weather data for any global city of interest. Current weather conditions and 5-day weather conditions are displayed. Up to 7 recently-searched cities are saved to local storage for easy reference. 
 
 ## SCREENSHOT
-<img src="./assets/weather-dashboard.png" alt="a glimpse of the openWeather user interface">
+<img src="/assets/weather-dashboard.png" alt="a glimpse of the openWeather user interface">
 
 ## BUILT WITH
 * HTML
