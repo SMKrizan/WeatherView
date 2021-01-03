@@ -14,7 +14,7 @@ This application allows users to retrieve weather data for any global city of in
 * OpenWeather API
 
 ## WEBSITE
-https://smkrizan.github.io/openWeatherAPI/
+https://smkrizan.github.io/WeatherView/
 
 
 ### CONTRIBUTION
