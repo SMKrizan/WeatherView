@@ -1,7 +1,7 @@
 # Weather View
 
 ## PURPOSE
-This application utilizes the "opeWeather", a 3rd party API, to enable the user to retrieve weather data for any global city of interest. Current weather conditions and 5-day weather conditions are displayed. Up to 7 recently-searched cities are saved to local storage for easy reference. 
+This application utilizes the "openWeather", a 3rd party API, to enable the user to retrieve weather data for any global city of interest. Current weather conditions and 5-day weather conditions are displayed. Up to 7 recently-searched cities are saved to local storage for easy reference. 
 
 ## SCREENSHOT
 <img src="./Assets/weatherView.jpg" alt="a glimpse of the openWeather user interface">
